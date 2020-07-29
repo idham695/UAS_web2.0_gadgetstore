@@ -7,11 +7,11 @@
     <c-side-bar />
 
     <!-- Konten Utama -->
-    <v-content>
+    <v-main>
       <v-slide-y-transition mode="out-in">
         <router-view></router-view>
       </v-slide-y-transition>
-    </v-content>
+    </v-main>
 
     <!-- Component Footer -->
     <c-footer />
@@ -33,7 +33,7 @@
 import { mapGetters, mapActions } from "vuex";
 import CHeader from "@/components/CHeader.vue";
 import CFooter from "@/components/CFooter.vue";
-import CSideBar from "@/components/CSideBar.vue";
+import CSideBar from "@/components/CSidebar.vue";
 import CAlert from "@/components/CAlert.vue";
 export default {
   name: "App",

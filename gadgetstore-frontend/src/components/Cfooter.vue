@@ -1,10 +1,10 @@
 <template>
   <v-footer dark height="auto" color="grey">
-    <v-flex xs12>
+    <v-flex xs12 text-center>
       <v-card text tile class="white--text text-xs-center" color="indigo">
         <!-- menu icon media social media -->
         <v-card-text>
-          <v-btn v-for="icon in icons" :key="icon" class="mx-3 white--text" icon>
+          <v-btn v-for="icon in icons" :key="icon" class="mx-5 white--text" icon>
             <v-icon size="24px">{{ icon }}</v-icon>
           </v-btn>
         </v-card-text>
@@ -13,7 +13,7 @@
           <!-- link menu halaman aplikasi -->
           <v-btn v-for="link in links" :key="link" color="white" text rounded>{{ link }}</v-btn>
 
-          <v-flex py-3 white--text xs12 color="primary">
+          <v-flex py-3 white--text xs10 text-center color="primary">
             &copy;2020 - Bookstore powered by
             <strong>Vuetify</strong>
           </v-flex>
