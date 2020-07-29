@@ -1,60 +1,66 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
+    <!-- Component Header -->
+    <c-header />
 
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
+    <!-- Component Sidebar -->
+    <c-side-bar />
 
-      <v-spacer></v-spacer>
+    <!-- Konten Utama -->
+    <v-content>
+      <v-slide-y-transition mode="out-in">
+        <router-view></router-view>
+      </v-slide-y-transition>
+    </v-content>
 
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
+    <!-- Component Footer -->
+    <c-footer />
 
-    <v-main>
-      <HelloWorld/>
-    </v-main>
+    <c-alert />
+
+    <!-- <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialogbottom-transition">
+      <search />
+    </v-dialog>-->
+
+    <keep-alive>
+      <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialogbottom-transition">
+        <component :is="currentComponent"></component>
+      </v-dialog>
+    </keep-alive>
   </v-app>
 </template>
-
 <script>
-import HelloWorld from './components/HelloWorld';
-
+import { mapGetters, mapActions } from "vuex";
+import CHeader from "@/components/CHeader.vue";
+import CFooter from "@/components/CFooter.vue";
+import CSideBar from "@/components/CSideBar.vue";
+import CAlert from "@/components/CAlert.vue";
 export default {
-  name: 'App',
-
+  name: "App",
   components: {
-    HelloWorld,
+    CHeader,
+    CSideBar,
+    CFooter,
+    CAlert,
   },
-
-  data: () => ({
-    //
-  }),
+  methods: {
+    ...mapActions({
+      setStatusDialog: "dialog/setStatus",
+    }),
+  },
+  computed: {
+    ...mapGetters({
+      statusDialog: "dialog/status",
+      currentComponent: "dialog/component",
+    }),
+    dialog: {
+      get() {
+        return this.statusDialog;
+      },
+      set(value) {
+        this.setStatusDialog(value);
+      },
+    },
+  },
 };
 </script>
