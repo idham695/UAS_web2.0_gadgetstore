@@ -35,6 +35,7 @@ import CHeader from "@/components/CHeader.vue";
 import CFooter from "@/components/CFooter.vue";
 import CSideBar from "@/components/CSidebar.vue";
 import CAlert from "@/components/CAlert.vue";
+// import Checkout from "@/views/Checkout.vue";
 export default {
   name: "App",
   components: {
@@ -42,6 +43,7 @@ export default {
     CSideBar,
     CFooter,
     CAlert,
+    // Checkout,
   },
   methods: {
     ...mapActions({

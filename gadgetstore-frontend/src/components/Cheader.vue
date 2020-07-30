@@ -30,7 +30,7 @@
     </v-btn>
 
     <!-- Kolom pencarian di bawah header -->
-    <v-text-field
+    <!-- <v-text-field
       v-if="isHome"
       slot="extension"
       @click="search()"
@@ -40,7 +40,7 @@
       label="Search"
       prepend-inner-icon="search"
       solo-inverted
-    ></v-text-field>
+    ></v-text-field>-->
   </v-app-bar>
 </template>
 <script>
