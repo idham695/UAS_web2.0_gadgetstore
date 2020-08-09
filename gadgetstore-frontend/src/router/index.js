@@ -49,6 +49,11 @@ const router = new VueRouter({
       meta: { auth: true },
     },
     {
+      path: "/gadgets",
+      name: "gadgets",
+      component: () => import("../views/Gadgets.vue"),
+    },
+    {
       path: "*",
       redirect: {
         name: "home",
