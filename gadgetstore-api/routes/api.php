@@ -25,6 +25,14 @@ Route::prefix('v1')->group(function () {
 
     Route::post('services', 'ShopController@services');
     Route::post('payment', 'ShopController@payment');
+
+    Route::post('login', 'AuthController@login');
+    Route::post('register', 'AuthController@register');
+    Route::middleware('auth:api')->group(function () {
+        Route::post('logout', 'AuthController@logout');
+    });
+    Route::get('gadgets', 'GadgetController@index');
+
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
