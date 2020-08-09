@@ -45,10 +45,10 @@
     <!-- Bagian kedua yaitu book -->
     <v-container grid-list-md>
       <v-subheader>
-        Top Books
+        Top Gadgets
         <v-spacer></v-spacer>
-        <!-- link ke route books yang nantinya akan kita definisikan routing dan componentnya -->
-        <router-link to="/books">See All</router-link>
+        <!-- link ke route gadgets yang nantinya akan kita definisikan routing dan componentnya -->
+        <router-link to="/gadgets">See All</router-link>
       </v-subheader>
       <v-layout row wrap>
         <!-- data buku kita tampilkan dalam dua kolom(xs6) -->
