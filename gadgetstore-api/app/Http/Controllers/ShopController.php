@@ -15,6 +15,31 @@ use DB;
 
 class ShopController extends Controller
 {
+    public function myOrder(Request $request)
+    {
+        $user = Auth::user();
+        $status = "error";
+        $message = "";
+        $data = null;
+        $code = 200;
+        if ($user) {
+            $orders = Order::select('*')
+                    ->where('user_id', '=', $user->id)
+                    ->orderBy('id', 'DESC')
+                    ->get();
+                $status = "success";
+                $message = "data my order";
+                $data = $orders;
+            } 
+        else {
+            $message = "user not found";
+        }
+        return response()->json([
+            'status' => $status,
+            'message' => $message,
+            'data' => $data
+        ], 200);
+    }
     public function provinces(){
         return new ProvinceResourceCollection(Province::get());
     }
@@ -363,3 +388,4 @@ class ShopController extends Controller
         ], 200);
     }
 }
+
