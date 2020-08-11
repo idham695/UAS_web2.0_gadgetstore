@@ -362,4 +362,30 @@ class ShopController extends Controller
             'data' => $data
         ], 200);
     }
+
+    public function myOrder(Request $request)
+    {
+        $user = Auth::user();
+        $status = 'error';
+        $message = "";
+        $data = [];
+        if ($user) {
+            $orders = Order::select('*')->where('user_id', '=', $user->id)
+            ->orderBy('id','DESC')->get();
+            $status = 'success';
+            $message = "data my order";
+            $data = $orders;
+        } else {
+            $message = "User not found";
+        }
+
+        return response()->json([
+            'status' => $status,
+            'message' => $message,
+            'data' => $data
+        ], 200);
+
+    }
+
+
 }
