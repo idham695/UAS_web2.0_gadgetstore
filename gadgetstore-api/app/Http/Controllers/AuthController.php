@@ -79,60 +79,38 @@ class AuthController extends Controller
     }
 
 
-    public function editProfile(Request $request, $id){
+    public function editProfile(Request $request){
 
-        $input = $request->all();
-
-        $user = User::find($id);
-
-        if (!$user) {
-            abort(404);
-        }
-
-        $status = "error"; 
-        $message = ""; 
-        $data = null; 
-        $code = 400;
-
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string',
-            'password' => 'required|string|min:6',
-            'address' => 'required',
-            'phone' => 'required',
-        ]);
-
-        $status = "error"; 
-        $message = ""; 
-        $data = null; 
-        $code = 400;
-
-        if($validator->fails()){
-            $errors = $validator->errors();
-            $message = $errors;
-                  
-        }else{
-                $user->name = $request->input('name');
-                $user->email = $request->input('email');
-                $plainPassword = $request->input('password');
-                $user->password = Hash::make($plainPassword);
-                $user->address = $request->input('address');
-                $user->phone = $request->input('phone');
+        $user = Auth::user();
+        $status = "error";
+        $message = "";
+        $data = null;
+        $code = 200;
+        if ($user) {
+            $this->validate($request, [
+                'name' => 'required', 
+                'email' => 'required', 
+                'address' => 'required',
+                'phone' => 'required',
+            ]);
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->address = $request->address;
+            $user->phone = $request->phone;
             if ($user->save()) {
-                $user->generateToken();
-                $status = "success"; 
-                $message = "edit profile successfully"; 
-                $data = $user->toArray(); 
-                $code = 200; 
-            } else{
-                $message = 'edit profile failed';
+                $status = "success";
+                $message = "Edit Profile Success";
+                $data = $user->toArray();
+            } else {
+                $message = "Edit Profile failed";
             }
-                
+        }else {
+            $message = "user not found";
         }
-        return response()->json([ 
-            'status' => $status, 
-            'message' => $message, 
-            'data' => $data 
+        return response()->json([
+            'status' => $status,
+            'message' => $message,
+            'data' => $data
         ], $code);
     }
 

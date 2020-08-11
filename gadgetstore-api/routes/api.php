@@ -34,7 +34,7 @@ Route::prefix('v1')->group(function () {
         Route::post('shipping', 'ShopController@shipping'); 
         Route::post('services', 'ShopController@services'); 
         Route::post('payment', 'ShopController@payment'); 
-        Route::post('edit-profile/{id}', 'AuthController@editProfile'); 
+        Route::post('edit-profile', 'AuthController@editProfile'); 
         Route::get('my-order', 'ShopController@myOrder');
     });
     Route::get('gadgets', 'GadgetController@index');

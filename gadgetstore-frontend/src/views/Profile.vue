@@ -11,6 +11,8 @@
             </tr>
           </tbody>
         </v-simple-table>
+        <v-spacer></v-spacer>
+        <v-btn :to="'/edit-profile/' + user.id">Edit Profile</v-btn>
       </v-container>
     </v-card>
   </div>
