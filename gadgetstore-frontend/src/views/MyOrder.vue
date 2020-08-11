@@ -14,6 +14,16 @@
                 <td>
                   {{item.status}}
                 </td>
+                <td>
+                <v-btn
+                @click="orderdetail()"
+                block
+                rounded
+                depressed
+                color="accent lighten-1"
+                class="white--text">Detail 
+                </v-btn>    
+                </td>
               </tr>
             </tbody>
           </v-simple-table>
@@ -39,6 +49,29 @@ export default {
     ...mapActions({
       setAlert : 'alert/set',
     }),
+    orderdetail() {
+      this.$emit('closed', false)
+      this.$router.push({path: "/orderdetail"})
+    },
+    go() {
+      let url = "/my-order";
+      if (this.page>0) {
+      url = '/my-order?page=' + this.page;
+      }
+        this.axios.get(url) 
+        .then(response => {
+          let response_data = response.data.data;
+          let gadgets = response_data.data;
+          this.lengthPage = response_data.data.last_page;
+          this.items = gadgets;
+          })
+        .catch((error) => {
+          console.log(error.response)
+        })
+      },
+      created(){
+      this.go
+    }
   },
   mounted(){
     let config = {
