@@ -31,4 +31,6 @@ class CategoryController extends Controller
         $criteria = Category::where('slug', $slug)->first();
         return new CategoryResource($criteria);
     }
+
+
 }

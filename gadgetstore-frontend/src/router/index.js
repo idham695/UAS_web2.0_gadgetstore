@@ -49,6 +49,12 @@ const router = new VueRouter({
       meta: { auth: true },
     },
     {
+      path: "/edit-profile",
+      name: "profile",
+      component: () => import("../views/Edit-Profile.vue"),
+      meta: { auth: true },
+    },
+    {
       path: "/gadgets",
       name: "gadgets",
       component: () => import("../views/Gadgets.vue"),

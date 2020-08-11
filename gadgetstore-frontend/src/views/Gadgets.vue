@@ -1,21 +1,28 @@
 <template>
   <div>
-    <v-container grid-list-md>
+    <!-- Bagian pertama yaitu category -->
+    <v-container grid-list-nd>
       <v-subheader>
-        All Gadgets
+        All Gadget
+        <v-spacer></v-spacer>
       </v-subheader>
       <v-layout row wrap>
-        <v-flex v-for="(gadget, index) in gadgets" xs6 :key="index">
+        <!-- lakukan perulangan pada properti gadgets -->
+        <v-flex v-for="(gadget, index) in gadgets" :key="index" xs6>
           <v-card :to="'/gadget/' + gadget.slug">
-            <v-img :src="getImage('/gadgets/' + gadget.image)" height="150px">
+            <!-- untuk load image supaya lebih rapi akan kita buatkan method getimage -->
+            <v-img :src="getImage('/gadgets/'+gadget.image)" height="150px">
               <v-container fill-height fluid pa-2>
                 <v-layout fill-height>
                   <v-flex xs12 align-end flexbox>
+                    <!-- nama caetegory-nya akan ditampilkan disini -->
                     <span class="title white--text text-block" v-text="gadget.name"></span>
                   </v-flex>
                 </v-layout>
               </v-container>
             </v-img>
+
+            <!-- icon dummynya saja, nantinya kamu bisa sesuaikan -->
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn icon>
@@ -34,13 +41,45 @@
     </v-container>
     <template>
       <div class="text-xs-center">
-      <v-pagination v-model="page" @input="go" :lenght="lengthPage" :total-visible="4"></v-pagination>
+        <!-- kode untuk link paging halaman -->
+        <v-pagination v-model="page" @input="go" :length="lengthPage" :total-visible="4"></v-pagination>
       </div>
     </template>
   </div>
 </template>
-
+<script>
+export default {
+  data() {
+    return {
+      gadgets: [],
+      page: 0,
+      lengthPage: 0,
+    };
+  },
+  methods: {
+    go() {
+      let url = "/gadgets";
+      if (this.page > 0) url = "/gadgets?page=" + this.page;
+      this.axios
+        .get(url)
+        .then((res) => {
+          let res_data = res.data;
+          let gadgets = res_data.data;
+          this.lengthPage = res_data.meta.last_page; // jumlah halaman di dapat dari meta endpoint gadgets
+          this.gadgets = gadgets; // daftar category  dari endpoint categories
+        })
+        .catch((err) => {
+          console.log(err.res);
+        });
+    },
+  },
+  created() {
+    this.go();
+  },
+};
+</script>
 <style scoped>
+/* mengatur posisi judul */
 .text-block {
   position: absolute;
   bottom: 5px;
@@ -52,33 +91,3 @@
   width: 100%;
 }
 </style>
-
-<script>
-export default {
-  data: () => ({
-    gadgets: [],
-    page: 0,
-    lengthPage: 0
-  }),
-  methods: {
-    go() {
-      let url = '/gadgets'
-      if (this.page>0) url = '/gadgets?page='+this.page
-      
-        this.axios.get(url) 
-        .then((response) => {
-          let response_data = response.data
-          let gadgets = response_data.data
-          this.lengthPage = response_data.meta.last_page
-          this.gadgets = gadgets
-          })
-        .catch((error) => {
-          console.log(error.response)
-        })
-      },
-    },
-    created(){
-      this.go
-    }
-  }
-</script>

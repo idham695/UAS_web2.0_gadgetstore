@@ -21,4 +21,5 @@ class GadgetController extends Controller
         ->get();
         return new GadgetResourceCollection($criteria);
     }
+    
 }

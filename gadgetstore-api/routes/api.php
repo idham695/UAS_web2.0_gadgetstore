@@ -15,9 +15,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('v1')->group(function () {
-    Route::get('categories/random/{count}', 'CategoryController@random');
+    Route::get('gadgets', 'GadgetController@index');
     Route::get('gadgets/top/{count}', 'GadgetController@top');
     Route::get('categories', 'CategoryController@index');
+    Route::get('categories/random/{count}', 'CategoryController@random');
     Route::get('categories/slug/{slug}', 'CategoryController@slug');
     Route::get('provinces', 'ShopController@provinces');
     Route::get('cities', 'ShopController@cities');
@@ -30,9 +31,8 @@ Route::prefix('v1')->group(function () {
     Route::post('register', 'AuthController@register');
     Route::middleware('auth:api')->group(function () {
         Route::post('logout', 'AuthController@logout');
+        Route::post('edit-profile/{id}', 'AuthController@editProfile');
     });
-    Route::get('gadgets', 'GadgetController@index');
-
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
