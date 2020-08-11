@@ -9,6 +9,6 @@ class Gadget extends Model
     protected $fillable = ['name', 'slug', 'description', 'image', 'price', 'weight', 'stock', 'status'];
     
     public function categories() {
-        return $this->belongsToMany('App\Models\Category');
+        return $this->belongsToMany('App\Models\Category', 'category', 'name','slug','image');;
     }
 }

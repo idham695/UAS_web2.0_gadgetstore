@@ -22,6 +22,5 @@ class Gadget extends JsonResource
             'message' => 'gadget data',
             'data' => $data
         ];
-        
     }
 }

@@ -7,9 +7,9 @@ use App\Http\Resources\Provinces as ProvinceResourceCollection;
 use App\Http\Resources\Cities as CityResourceCollection;
 use App\Models\Province;
 use App\Models\City;
-use App\Models\Book;
+use App\Models\Gadget;
 use App\Models\Order;
-use App\Models\BookOrder;
+use App\Models\GadgetOrder;
 use Auth;
 use DB;
 
@@ -89,22 +89,22 @@ class ShopController extends Controller
             $id = (int)$cart['id'];
             $quantity = (int) $cart['quantity'];
             $total['quantity_before'] += $quantity;
-            $book = Book::find($id);
-            if ($book) {
-                if ($book->stock>0) {
-                    $safe_carts[$idx]['id'] = $book->id;
-                    $safe_carts[$idx]['title'] = $book->title;
-                    $safe_carts[$idx]['cover'] = $book->cover;
-                    $safe_carts[$idx]['price'] = $book->price;
-                    $safe_carts[$idx]['weight'] = $book->weight;
-                    if ($book->stock < $quantity) {
-                        $quantity = (int) $book->stock;
+            $gadget = Gadget::find($id);
+            if ($gadget) {
+                if ($gadget->stock>0) {
+                    $safe_carts[$idx]['id'] = $gadget->id;
+                    $safe_carts[$idx]['name'] = $gadget->name;
+                    $safe_carts[$idx]['image'] = $gadget->image;
+                    $safe_carts[$idx]['price'] = $gadget->price;
+                    $safe_carts[$idx]['weight'] = $gadget->weight;
+                    if ($gadget->stock < $quantity) {
+                        $quantity = (int) $gadget->stock;
                     }
                     $safe_carts[$idx]['quantity'] = $quantity;
 
                     $total['quantity'] += $quantity;
-                    $total['price'] += $book->price * $quantity;
-                    $total['weight'] += $book->weight * $quantity;
+                    $total['price'] += $gadget->price * $quantity;
+                    $total['weight'] += $gadget->weight * $quantity;
                     $idx++;
                 }
                 else {
@@ -270,20 +270,20 @@ class ShopController extends Controller
                         foreach ($carts as $cart) {
                             $id = (int)$cart['id'];
                             $quantity = (int)$cart['quantity'];
-                            $book = Book::find($id);
-                            if ($book) {
-                                if ($book->stock>=$quantity) {
-                                    $total_price += $book->price * $quantity;
-                                    $total_weight += $book->weight * $quantity;
-                                    // create book order
-                                    $book_order = new BookOrder;
-                                    $book_order->book_id = $book->id;
-                                    $book_order->order_id = $order->id;
-                                    $book_order->quantity = $quantity;
-                                    if ($book_order->save()) {
+                            $gadget = Gadget::find($id);
+                            if ($gadget) {
+                                if ($gadget->stock>=$quantity) {
+                                    $total_price += $gadget->price * $quantity;
+                                    $total_weight += $gadget->weight * $quantity;
+                                    // create gadget order
+                                    $gadget_order = new gadgetOrder;
+                                    $gadget_order->gadget_id = $gadget->id;
+                                    $gadget_order->order_id = $order->id;
+                                    $gadget_order->quantity = $quantity;
+                                    if ($gadget_order->save()) {
                                         // kurangi stock
-                                        $book->stock = $book->stock - $quantity;
-                                        $book->save();
+                                        $gadget->stock = $gadget->stock - $quantity;
+                                        $gadget->save();
                                     }
                                 }
                                 else {
@@ -293,7 +293,7 @@ class ShopController extends Controller
                             }
                             else {
                                 $error++;
-                                throw new \Exception("Book is not found");
+                                throw new \Exception("gadget is not found");
                             }
                         }
                     $totalBill = 0;
