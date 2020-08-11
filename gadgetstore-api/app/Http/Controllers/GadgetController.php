@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Gadget;
 use App\Http\Resources\Gadgets as GadgetResourceCollection;
+use App\Http\Resources\Gadget as GadgetResource;
+use Illuminate\Support\Facades\DB;
 
 class GadgetController extends Controller
 {
@@ -13,6 +15,13 @@ class GadgetController extends Controller
         $criteria = Gadget::paginate(4);
         return new GadgetResourceCollection($criteria);
     }
+
+    public function slug($slug)
+    {
+        $criteria = Gadget::where('slug', $slug)->first();
+        return new GadgetResource($criteria);
+    }
+
     public function top($count)
     {
         $criteria = Gadget::select('*')
