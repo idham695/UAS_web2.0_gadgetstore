@@ -10,7 +10,7 @@ class Category extends Model
 
 
      public function gadgets(){
-        return $this->belongsToMany('App\Models\Gadget', 'gadget_category', 'category_id','gadget_id');
+        return $this->belongsToMany('App\Models\Gadget', 'gadget_category', 'category_id', 'gadget_id');
     }
 
 }

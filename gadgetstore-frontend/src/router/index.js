@@ -60,6 +60,11 @@ const router = new VueRouter({
       component: () => import("../views/Gadgets.vue"),
     },
     {
+      path: "/gadget/:slug",
+      name: "gadget",
+      component: () => import("../views/Gadget.vue"),
+    },
+    {
       path: "*",
       redirect: {
         name: "home",
