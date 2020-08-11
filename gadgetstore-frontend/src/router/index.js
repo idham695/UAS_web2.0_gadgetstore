@@ -55,6 +55,12 @@ const router = new VueRouter({
       meta: { auth: true },
     },
     {
+      path: "/my-order",
+      name: "my-order",
+      component: () => import("../views/MyOrder.vue"),
+      meta: { auth: true },
+    },
+    {
       path: "/gadgets",
       name: "gadgets",
       component: () => import("../views/Gadgets.vue"),
