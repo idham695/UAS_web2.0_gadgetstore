@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Resources\Provinces as ProvinceResourceCollection;
 use App\Http\Resources\Cities as CityResourceCollection;
+use App\Http\Resources\Order as OrderResource;
 use App\Models\Province;
 use App\Models\City;
 use App\Models\Gadget;
@@ -14,7 +15,7 @@ use Auth;
 use DB;
 
 class ShopController extends Controller
-{
+{   
     public function provinces(){
         return new ProvinceResourceCollection(Province::get());
     }
@@ -385,6 +386,34 @@ class ShopController extends Controller
             'data' => $data
         ], 200);
 
+    }
+    
+    public function detailsOrder($id){
+        $user = Auth::user();
+
+        $status = "error";
+        $message = "";
+        $data = null;
+        $code = 200;
+
+        try {
+            $course = new OrderResource(Order::find($id));
+                if($course){
+                    $status = "success";
+                    $message = "data details order";
+                    $data = $course;
+                }else{
+                    $message = "data gagal diambil";
+                }
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+        }
+
+        return response()->json([
+            'status' => $status,
+            'message' => $message,
+            'data' => $data
+        ], 200);
     }
 
 
