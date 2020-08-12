@@ -1,97 +1,88 @@
 <template>
- <div>
-    <v-subheader>Histori Belanja</v-subheader>
+  <div>
+    <v-subheader>History Belanja</v-subheader>
     <v-card flat>
       <v-container>
         <v-simple-table>
           <tbody>
             <tr v-for="item in items" :key="item.id">
-              <td><br>
-                Invoice: {{item.invoice_number}}
-                <div class="primary--text title">Rp. {{item.total_price.toLocaleString('id-ID')}}</div>
-                <small>date: {{ item.update_at }}. courier: {{ item.courier_service }}</small><br><br>
-                </td>
-                <td>
-                  {{item.status}}
-                </td>
-                <td>
+              <td>
+                <br />
+                Invoice: {{ item.invoice_number }}
+                <div class="primary--text title">
+                  Rp. {{ item.total_price.toLocaleString("id-ID") }}
+                </div>
+                <small
+                  >date: {{ item.updated_at }}. <br />courier:
+                  {{ item.courier_service }}. <br />status:
+                  {{ item.status }}</small
+                ><br /><br />
+              </td>
+              <td>
                 <v-btn
-                @click="orderdetail()"
-                block
-                rounded
-                depressed
-                color="accent lighten-1"
-                class="white--text">Detail 
-                </v-btn>    
-                </td>
-              </tr>
-            </tbody>
-          </v-simple-table>
-        </v-container>
-      </v-card>
- </div>
+                  color="success"
+                  :to="'/order-detail/' + item.invoice_number"
+                  >Details</v-btn
+                >
+              </td>
+            </tr>
+          </tbody>
+        </v-simple-table>
+      </v-container>
+    </v-card>
+  </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
 export default {
-  data () {
+  data() {
     return {
       items: [],
-    }
+    };
   },
   computed: {
     ...mapGetters({
-      user : 'auth/user',
-    })
-  },  
+      user: "auth/user",
+    }),
+  },
   methods: {
     ...mapActions({
-      setAlert : 'alert/set',
+      setAlert: "alert/set",
     }),
-    orderdetail() {
-      this.$emit('closed', false)
-      this.$router.push({path: "/orderdetail"})
+    orderDetail() {
+      let formData = new FormData();
+      formData.set("invoice", 20200811155748);
+      let config = {
+        headers: {
+          Authorization: "Bearer " + this.user.api_token,
+        },
+      };
+      this.axios.post("/order-detail", formData, config).then((response) => {
+        console.log(response);
+      });
     },
-    go() {
-      let url = "/my-order";
-      if (this.page>0) {
-      url = '/my-order?page=' + this.page;
-      }
-        this.axios.get(url) 
-        .then(response => {
-          let response_data = response.data.data;
-          let gadgets = response_data.data;
-          this.lengthPage = response_data.data.last_page;
-          this.items = gadgets;
-          })
-        .catch((error) => {
-          console.log(error.response)
-        })
-      },
-      created(){
-      this.go
-    }
   },
-  mounted(){
+  mounted() {
     let config = {
       headers: {
-        'Authorization': 'Bearer ' + this.user.api_token,
+        Authorization: "Bearer " + this.user.api_token,
       },
-    }
-    this.axios.get('/my-order', config)
-        .then((response) => {
-          let {data} = response.data
-          this.items = data
-        })
-        .catch((error) => {
-          let {data} = error.response
-          this.setAlert({
-            status : true,
-            text : data.message,
-            color : 'error',
-          })
-        })
-     }   
-  }
+    };
+    this.axios
+      .post("/my-order", {}, config)
+      .then((response) => {
+        let { data } = response.data;
+        this.items = data;
+      })
+      .catch((error) => {
+        let { data } = error.response;
+        this.setAlert({
+          status: true,
+          text: data.message,
+          color: "error",
+        });
+      });
+  },
+};
 </script>

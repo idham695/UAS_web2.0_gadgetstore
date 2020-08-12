@@ -1,98 +1,84 @@
 <template>
-	<div>
-		<v-subheader>Order Detail</v-subheader>
-		<v-card flat>
-			<v-container>
-				<v-simple-table>
-					<thead>
-						<th class="text-left">Name</th>
-						<th class="text-left">Price</th>
-					</thead>
-					<tbody>
-						<tr v-for="item in items" :key="item.id">
-							<td>{{ item.invoice_number}}</td>
-							<td>{{ item.total_price}}</td>
-							<td>{{ item.courier_service}}</td>
-							<td>{{ item.status}}</td>
-						</tr>
-					</tbody>
-				</v-simple-table>
-				<v-spacer></v-spacer>
-				<!--<v-simple-table>
-					<thead>
-						<th class="text-left">Order Summary</th>
-					</thead>
-					<tbody>
-						<tr>
-							<td>Total Price</td>
-							<td>{{ detailsOrder.data.total_price }}</td>
-						</tr>
-						<tr>
-							<td>Order Date</td>
-							<td>{{ detailsOrder.data.created_at }}</td>
-						</tr>
-						<tr>
-							<td>Status Order</td>
-							<td>{{ detailsOrder.data.status }}</td>
-						</tr>
-					</tbody>
-				</v-simple-table>-->
-			</v-container>
-		</v-card>
-	</div>
+  <v-card>
+    <v-toolbar dark color="success">
+      <v-toolbar-title> Your Order Details ! </v-toolbar-title>
+    </v-toolbar>
+    <v-divider></v-divider>
+    <v-container fluid>
+      <v-list three-line>
+        <template v-for="(item, index) in orderDetail">
+          <v-list-item :key="'order' + index" :to="'/gadget/' + item.slug">
+            <v-list-item-avatar>
+              <v-img :src="getImage(item.cover)" contain></v-img>
+            </v-list-item-avatar>
+
+            <v-list-item-content>
+              <v-list-item-title v-html="item.merk"></v-list-item-title>
+              <v-list-item-subtitle>
+                Rp. {{ item.price.toLocaleString("id-ID") }} ({{ item.weight }}
+                kg)
+                <span style="float:right"> x {{ item.quantity }} </span>
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
+      </v-list>
+      <v-card>
+        <v-card-text>
+          <v-layout wrap>
+            <v-flex pa-1>
+              No. Invoice : {{ invoice }}<br />
+              Total Price ({{ totalQuantity }} items) <br />
+              <span class="title"> Rp. {{ totalPrice }} </span>
+            </v-flex>
+          </v-layout>
+        </v-card-text>
+      </v-card>
+    </v-container>
+  </v-card>
 </template>
+
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
 export default {
-	data() {
-		return {
-			items: [],
-		};
-	},
-	computed: {
-		...mapGetters({
-			user: "auth/user"
-		})
-	},
-	methods: {
-		...mapActions({
-			setOrder: "order/set"
-		})
-	},
-	mounted() {
-		let id = this.$route.params.id;
-		console.log(id);
-		let config = {
-			headers: {
-				Authorization: "Bearer " + this.user.api_token
-			}
-		};
-		this.axios
-			.get("/orderdetail/" + id, config)
-			.then(response => {
-				let { data } = response.data.data;
-				this.items = data
-			})
-			.catch(error => {
-				let { data } = error.response;
-				this.setAlert({
-					status: true,
-					text: data.message,
-					color: "error"
-				});
-			});
-	},
-	created() {
-    let id = this.$route.params.id;
+  data() {
+    return {
+      orderDetail: {},
+      totalPrice: 0,
+      invoice: "",
+      totalQuantity: 0,
+    };
+  },
+  computed: {
+    ...mapGetters({
+      user: "auth/user",
+    }),
+  },
+  methods: {},
+  mounted() {
+    let invoice = this.$route.params.invoice;
+    this.invoice = invoice;
+    let formData = new FormData();
+    formData.set("invoice", invoice);
+    let config = {
+      headers: {
+        Authorization: "Bearer " + this.user.api_token,
+      },
+    };
     this.axios
-      .get("/my-order/" + id)
+      .post("/order-detail", formData, config)
       .then((response) => {
-        let order = response.data.data;
-        this.item = order;
+        let orderDetail = response.data.data;
+        this.orderDetail = orderDetail;
+        this.totalPrice = orderDetail[0].total_price.toLocaleString("id-ID");
+        orderDetail.forEach((item) => {
+          this.totalQuantity += item.quantity;
+        });
       })
       .catch((error) => {
         let responses = error.response;
         console.log(responses);
-      })}
-}
+      });
+  },
+};
 </script>
