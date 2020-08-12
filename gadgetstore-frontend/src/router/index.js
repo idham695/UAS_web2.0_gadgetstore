@@ -71,6 +71,11 @@ const router = new VueRouter({
       component: () => import("../views/Gadget.vue"),
     },
     {
+    path: "/orderdetail",
+    name: "orderdetail",
+    component: () => import('../views/OrderDetail.vue'),
+  },
+    {
       path: "*",
       redirect: {
         name: "home",
